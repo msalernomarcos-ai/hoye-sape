@@ -1,4 +1,5 @@
-// API de votos: GET devuelve resultados, POST guarda (o cambia) un voto.
+// Worker: sirve la página (carpeta public) y la API de votos en /api/votos.
+// GET devuelve resultados, POST guarda (o cambia) un voto.
 // Base de datos: Cloudflare D1, enlazada como DB. Clave opcional del grupo: variable CLAVE.
 const json = (d, s = 200) => new Response(JSON.stringify(d), {
   status: s, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' }
@@ -13,7 +14,7 @@ function claveOk(ctx, clave) {
   return !ctx.env.CLAVE || clave === ctx.env.CLAVE;
 }
 
-export async function onRequestGet(ctx) {
+async function onRequestGet(ctx) {
   const db = ctx.env.DB;
   const url = new URL(ctx.request.url);
   const [comida, zarpado] = await Promise.all([
@@ -28,7 +29,7 @@ export async function onRequestGet(ctx) {
   return json({ comida: comida.results, zarpado: zarpado.results, mios, requiereClave: !!ctx.env.CLAVE });
 }
 
-export async function onRequestPost(ctx) {
+async function onRequestPost(ctx) {
   let b;
   try { b = await ctx.request.json(); } catch { return json({ error: 'Pedido inválido' }, 400); }
   if (!claveOk(ctx, String(b.clave || ''))) return json({ error: 'La clave del grupo no es correcta' }, 403);
@@ -64,3 +65,20 @@ export async function onRequestPost(ctx) {
 
   return json({ ok: true });
 }
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === '/api/votos') {
+      const ctx = { request, env };
+      try {
+        if (request.method === 'GET') return await onRequestGet(ctx);
+        if (request.method === 'POST') return await onRequestPost(ctx);
+        return json({ error: 'Método no permitido' }, 405);
+      } catch (e) {
+        return json({ error: 'Error del servidor' }, 500);
+      }
+    }
+    return env.ASSETS.fetch(request);
+  }
+};
