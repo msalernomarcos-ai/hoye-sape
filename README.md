@@ -8,7 +8,6 @@ Página de la juntada de los miércoles: mesa de la semana, votos de comida y de
 - `public/data/semanas.json`: **los datos**. Es lo único que se toca cada jueves.
 - `functions/api/votos.js`: la API de votos (Cloudflare Pages Functions).
 - `schema.sql`: la tabla de votos (Cloudflare D1, base SQL gratis).
-- `wrangler.toml`: configuración de Cloudflare.
 
 Hosting y base: Cloudflare Pages + D1, plan gratis (sobra para 17 personas). El único costo es el dominio.
 
@@ -40,13 +39,15 @@ Agregar una semana al final de `"semanas"` en `public/data/semanas.json` y cambi
 
 Los nombres van con su id (minúsculas y guiones, como figura en `"participantes"`). Si el archivo está en GitHub, se edita desde la web (lápiz, "Commit changes") y la página se actualiza sola en un minuto. O más fácil: mandarle a Claude el resumen de la juntada y que lo cargue.
 
-## Puesta en marcha (una sola vez)
+## Puesta en marcha (una sola vez, en Cloudflare)
 
-1. **GitHub**: crear un repositorio vacío (por ejemplo `hoye-sape`) y darle acceso a Claude para subir el código.
-2. **Cloudflare**: crear una cuenta gratis en cloudflare.com.
-3. **Base de datos**: en Cloudflare, Storage & Databases > D1 > Create, nombre `hoye-sape`. Copiar el *Database ID* y ponerlo en `wrangler.toml`. En la pestaña Console de la base, pegar el contenido de `schema.sql` y ejecutar.
-4. **Página**: Workers & Pages > Create > Pages > Connect to Git, elegir el repositorio. Framework: ninguno. Build command: vacío. Output directory: `public`. Deploy. Queda en `hoye-sape.pages.dev`.
-5. Settings > Variables and Secrets: agregar `CLAVE` (tipo Secret) con la clave del grupo y volver a desplegar. Sin la clave se puede ver todo, pero no votar.
+1. **Base de datos**: Storage & Databases > D1 SQL Database > Create database, nombre `hoye-sape`. Entrar a la base, pestaña Console, pegar el contenido de `schema.sql` y Execute.
+2. **Página**: Workers & Pages > Create > pestaña Pages > Import an existing Git repository, elegir `hoye-sape`. Framework preset: None. Build command: vacío. Build output directory: `public`. Save and Deploy.
+3. **Conectar la base**: en el proyecto, Settings > Bindings > Add > D1 database. Variable name: `DB`, base: `hoye-sape`.
+4. **Clave**: Settings > Variables and Secrets > Add, tipo Secret, nombre `CLAVE`, valor la clave del grupo.
+5. **Redeploy**: Deployments > en el último, los tres puntitos > Retry deployment, para que tome la base y la clave.
+
+Queda en `hoye-sape.pages.dev`.
 
 ## Dominio propio
 
