@@ -6,10 +6,11 @@ Página de la juntada de los miércoles: mesa de la semana, votos de comida y de
 
 - `public/index.html`: toda la página (diseño y lógica).
 - `public/data/semanas.json`: **los datos**. Es lo único que se toca cada jueves.
-- `functions/api/votos.js`: la API de votos (Cloudflare Pages Functions).
+- `src/worker.js`: el Worker de Cloudflare que sirve la página y la API de votos.
+- `wrangler.jsonc`: configuración de Cloudflare (base D1 y carpeta `public`).
 - `schema.sql`: la tabla de votos (Cloudflare D1, base SQL gratis).
 
-Hosting y base: Cloudflare Pages + D1, plan gratis (sobra para 17 personas). El único costo es el dominio.
+Hosting y base: Cloudflare Workers + D1, plan gratis (sobra para 17 personas). El único costo es el dominio.
 
 ### Reglas de votación
 
@@ -39,15 +40,11 @@ Agregar una semana al final de `"semanas"` en `public/data/semanas.json` y cambi
 
 Los nombres van con su id (minúsculas y guiones, como figura en `"participantes"`). Si el archivo está en GitHub, se edita desde la web (lápiz, "Commit changes") y la página se actualiza sola en un minuto. O más fácil: mandarle a Claude el resumen de la juntada y que lo cargue.
 
-## Puesta en marcha (una sola vez, en Cloudflare)
+## Puesta en marcha (ya hecha)
 
-1. **Base de datos**: Storage & Databases > D1 SQL Database > Create database, nombre `hoye-sape`. Entrar a la base, pestaña Console, pegar el contenido de `schema.sql` y Execute.
-2. **Página**: Workers & Pages > Create > pestaña Pages > Import an existing Git repository, elegir `hoye-sape`. Framework preset: None. Build command: vacío. Build output directory: `public`. Save and Deploy.
-3. **Conectar la base**: en el proyecto, Settings > Bindings > Add > D1 database. Variable name: `DB`, base: `hoye-sape`.
-4. **Clave**: Settings > Variables and Secrets > Add, tipo Secret, nombre `CLAVE`, valor la clave del grupo.
-5. **Redeploy**: Deployments > en el último, los tres puntitos > Retry deployment, para que tome la base y la clave.
-
-Queda en `hoye-sape.pages.dev`.
+1. Worker `hoye-sape` en Cloudflare conectado a este repositorio: cada cambio en `main` se publica solo.
+2. Base D1 `hoye-sape` con la tabla de `schema.sql` (se pega en la pestaña Console de la base).
+3. Secreto `CLAVE` en el Worker (Settings > Variables and Secrets) con la clave del grupo.
 
 ## Dominio propio
 
@@ -56,4 +53,4 @@ Dos caminos:
 - **.com.ar**: se registra en NIC Argentina (nic.ar) con clave fiscal de AFIP/ARCA. Es barato, se paga en pesos por año. Después, en Cloudflare: Add a domain, y en nic.ar se cambian los DNS (delegación) por los dos que te da Cloudflare.
 - **.com u otro**: se compra directo en Cloudflare (Domain Registration), a precio de costo, aprox. USD 10 a 12 por año, y queda todo en el mismo lugar.
 
-Con el dominio en Cloudflare: proyecto de Pages > Custom domains > Set up a custom domain > escribir el dominio. El certificado HTTPS es automático.
+Con el dominio en Cloudflare: Worker hoye-sape > Settings > Domains & Routes > Add > Custom domain > escribir el dominio. El certificado HTTPS es automático.
