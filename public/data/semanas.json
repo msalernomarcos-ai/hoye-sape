@@ -1,0 +1,46 @@
+{
+  "grupo": "Hoye Sape",
+  "participantes": [
+    { "id": "felipe-bulacio", "nombre": "Felipe Bulacio" },
+    { "id": "rodolfo-fumero", "nombre": "Rodolfo Fumero" },
+    { "id": "santiago-granillo", "nombre": "Santiago Granillo" },
+    { "id": "christian-fleischer", "nombre": "Christian Fleischer" },
+    { "id": "felipe-morris", "nombre": "Felipe Morris" },
+    { "id": "felipe-traynor", "nombre": "Felipe Traynor" },
+    { "id": "pablo-abalos", "nombre": "Pablo Abalos" },
+    { "id": "gonzalo-diaz-canton", "nombre": "Gonzalo Diaz Canton" },
+    { "id": "nicolas-cardalda", "nombre": "Nicolas Cardalda" },
+    { "id": "marcos-salerno", "nombre": "Marcos Salerno" },
+    { "id": "santiago-cano", "nombre": "Santiago Cano" },
+    { "id": "tomas-ferrari", "nombre": "Tomas Ferrari" },
+    { "id": "tomas-garcia-yanez", "nombre": "Tomas Garcia Yañez" },
+    { "id": "mateo-rodriguez-varela", "nombre": "Mateo Rodriguez Varela" },
+    { "id": "ignacio-cruz-allende", "nombre": "Ignacio Cruz Allende" },
+    { "id": "mateo-scalella", "nombre": "Mateo Scalella", "apodo": "El Facha" },
+    { "id": "santiago-algarra", "nombre": "Santiago Algarra" }
+  ],
+  "semanas": [
+    {
+      "numero": 1,
+      "fecha": "2026-11-25",
+      "anfitrion": "santiago-algarra",
+      "plato": "Carne desmenuzada con papas al horno, para comer con pan",
+      "postre": "Helado (comprado)",
+      "notas": "",
+      "ausentes": [
+        "ignacio-cruz-allende",
+        "tomas-ferrari",
+        "tomas-garcia-yanez",
+        "nicolas-cardalda",
+        "felipe-morris",
+        "felipe-traynor",
+        "pablo-abalos"
+      ],
+      "votacionAbierta": true
+    }
+  ],
+  "proximo": {
+    "anfitrion": "mateo-scalella",
+    "fecha": "2026-12-02"
+  }
+}
